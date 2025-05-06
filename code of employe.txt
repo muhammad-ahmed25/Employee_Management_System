@@ -1,0 +1,171 @@
+import csv
+
+FILE_NAME = "D:\EMPLOYE2.txt"  # File path for employee records
+
+# Function to add a new employee along with their rank (as a string like "Manager", "Boss")
+def add_employee():
+    emp_id = input("Enter employee ID: ")
+    name = input("Enter employee name: ")
+    salary = input("Enter salary: ")
+    rank = input("Enter employee rank (e.g., 'Manager', 'Boss', 'Employee'): ")
+
+    with open(FILE_NAME, "a") as file:
+        file.write(f'{emp_id},{name},{salary},{rank}\n')
+        print("Employee added successfully.")
+
+# Function to view all employees with their rank
+def view_employee():
+    print("\nEmployee Records:")
+    print("ID | Name | Salary | Rank")
+    print("-" * 40)
+    try:
+        with open(FILE_NAME, "r") as file:
+            for line in file:
+                data = line.strip().split(",")
+                print(f"{data[0]} | {data[1]} | {data[2]} | {data[3]}")
+    except FileNotFoundError:
+        print("The file does not exist.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Function to search for an employee by ID, Name, or Rank
+def search_employee():
+    search_type = input("Do you want to search by ID, Name, or Rank? (Enter 'ID', 'Name', or 'Rank'): ").strip().lower()
+
+    if search_type == 'id':
+        search_id = input("Enter the employee ID to search: ")
+        found = False
+        try:
+            with open(FILE_NAME, "r") as file:
+                for line in file:
+                    data = line.strip().split(",")
+                    if data[0] == search_id:
+                        print(f"Employee found: ID = {data[0]}, Name = {data[1]}, Salary = {data[2]}, Rank = {data[3]}")
+                        found = True
+                        break
+            if not found:
+                print("Employee not found.")
+        except FileNotFoundError:
+            print("The file does not exist.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    elif search_type == 'name':
+        search_name = input("Enter the employee name to search: ").strip().lower()
+        found = False
+        try:
+            with open(FILE_NAME, "r") as file:
+                for line in file:
+                    data = line.strip().split(",")
+                    if data[1].lower() == search_name:
+                        print(f"Employee found: ID = {data[0]}, Name = {data[1]}, Salary = {data[2]}, Rank = {data[3]}")
+                        found = True
+            if not found:
+                print("Employee not found.")
+        except FileNotFoundError:
+            print("The file does not exist.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    elif search_type == 'rank':
+        search_rank = input("Enter the employee rank (e.g., 'Manager', 'Boss') to search: ").strip().lower()
+        found = False
+        try:
+            with open(FILE_NAME, "r") as file:
+                for line in file:
+                    data = line.strip().split(",")
+                    if data[3].lower() == search_rank:
+                        print(f"Employee found: ID = {data[0]}, Name = {data[1]}, Salary = {data[2]}, Rank = {data[3]}")
+                        found = True
+            if not found:
+                print("Employee not found.")
+        except FileNotFoundError:
+            print("The file does not exist.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+    else:
+        print("Invalid search type. Please enter 'ID', 'Name', or 'Rank'.")
+
+# Function to delete an employee by ID
+def delete_employee():
+    emp_id = input("Enter the employee ID to delete: ")
+    found = False
+    try:
+        with open(FILE_NAME, "r") as file:
+            lines = file.readlines()
+
+        with open(FILE_NAME, "w") as file:
+            for line in lines:
+                data = line.strip().split(",")
+                if data[0] != emp_id:
+                    file.write(line)
+                else:
+                    found = True
+
+        if found:
+            print(f"Employee with ID {emp_id} has been deleted.")
+        else:
+            print("Employee not found.")
+    except FileNotFoundError:
+        print("The file does not exist.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Function to update an employee's details by ID
+def update_employee():
+    emp_id = input("Enter the employee ID to update: ")
+    found = False
+    try:
+        with open(FILE_NAME, "r") as file:
+            lines = file.readlines()
+
+        with open(FILE_NAME, "w") as file:
+            for line in lines:
+                data = line.strip().split(",")
+                if data[0] == emp_id:
+                    print(f"Employee found: ID = {data[0]}, Name = {data[1]}, Salary = {data[2]}, Rank = {data[3]}")
+                    new_name = input("Enter new name: ")
+                    new_salary = input("Enter new salary: ")
+                    new_rank = input("Enter new rank (e.g., 'Manager', 'Boss'): ")
+                    file.write(f'{emp_id},{new_name},{new_salary},{new_rank}\n')
+                    found = True
+                else:
+                    file.write(line)
+
+        if found:
+            print(f"Employee with ID {emp_id} has been updated.")
+        else:
+            print("Employee not found.")
+    except FileNotFoundError:
+        print("The file does not exist.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Main program loop for interacting with the user
+if __name__ == "__main__":
+    while True:
+        print("\nMenu:")
+        print("1. Add Employee")
+        print("2. View Employees")
+        print("3. Search Employee")
+        print("4. Delete Employee")
+        print("5. Update Employee")
+        print("6. Exit")
+
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            add_employee()
+        elif choice == '2':
+            view_employee()
+        elif choice == '3':
+            search_employee()
+        elif choice == '4':
+            delete_employee()
+        elif choice == '5':
+            update_employee()
+        elif choice == '6':
+            print("Exiting program.")
+            break
+        else:
+            print("Invalid choice, please try again.")
